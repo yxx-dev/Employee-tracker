@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2/promise');
+let dbConnect;
 const cTable = require('console.table');
 
 //connect database
@@ -8,7 +9,7 @@ connectDb();
 
 
 async function connectDb () {
-  const connection = await mysql.createConnection({
+  dbConnect = await mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: '',
@@ -39,13 +40,13 @@ async function inquirerInit() {
   ]).then((answers) => {
     switch (answers.initialAction) {
       case 'view all departments':
-
+        viewQuery('dep');
         break;
       case 'view all roles':
-
+        viewQuery('role');
         break;
       case 'view all employees':
-        
+        viewQuery('emp');
         break;
       case 'add a department':
         
@@ -66,4 +67,22 @@ async function inquirerInit() {
     console.error(err);
   });
 
+}
+
+async function viewQuery (option) {
+  let rows=[];
+  switch (option) {
+    case 'dep':
+      [rows] = await dbConnect.query('SELECT * FROM department');
+      break;
+    case 'role':
+      [rows] = await dbConnect.query('SELECT * FROM role');
+      break;
+    case 'emp':
+      [rows] = await dbConnect.query('SELECT * FROM employee');
+      break;
+    default: console.log('no data');
+  }
+  //display query data
+  console.table(rows);
 }
