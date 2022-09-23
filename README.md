@@ -2,7 +2,7 @@
 
 ## Description
 A command-line application that allows non-developers to easily view and interact with employee information stored in databases, using Node.js, Inquirer, and MySQL.
-Demonstration: 
+Demonstration: https://drive.google.com/file/d/1mSmHIzf8KwYfCoZOtuTnVMmiDOeOoRFq/view
 
 Functions: 
 1. View department, role and employee info from database
