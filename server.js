@@ -59,7 +59,7 @@ function inquirerInit() {
         inquirerAddEmp();
        break;
       case 'update an employee role':
-
+        inquirerUpdateEmp();
         break;
       case 'exit':
         process.exit();
@@ -71,6 +71,7 @@ function inquirerInit() {
   });
 
 }
+
 
 //query to view database tables
 async function viewQuery (option) {
@@ -94,7 +95,8 @@ async function viewQuery (option) {
   inquirerInit();
 }
 
-//prompt to enter department name
+
+//prompt to enter department name for addition
 function inquirerAddDep () {
   inquirer.prompt([
     {
@@ -116,7 +118,8 @@ async function addDep (name) {
   //console.log(result);
 }
 
-//prompt to enter role info
+
+//prompt to enter role info for addition
 async function inquirerAddRole () {
   //retrive department names
   const [rows] = await dbConnect.query('SELECT name FROM department');
@@ -156,7 +159,8 @@ async function addRole (title, salary, department) {
   viewQuery('role');
 }
 
-//prompt to enter employee info
+
+//prompt to enter employee info for addition
 async function inquirerAddEmp () {
   //retrive role titles
   const [rows] = await dbConnect.query('SELECT title FROM role');
@@ -206,5 +210,50 @@ async function addEmp (firstname, lastname, role, managerId) {
 
   //console.log(id, department);
   const result = await dbConnect.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`, [firstname, lastname, id, mgrId]);
+  viewQuery('emp');
+}
+
+//prompt to enter employee info for update
+async function inquirerUpdateEmp () {
+  //retrive employee records
+  [rows] = await dbConnect.query('SELECT id, first_name, last_name FROM employee');
+  const names = rows.map(x => `${x.id}. ${x.first_name} ${x.last_name}`);
+
+  //retrive role titles
+  [rows] = await dbConnect.query('SELECT title FROM role');
+  const roleTitles = rows.map(x => x.title);
+
+  inquirer.prompt([
+    {
+      type: 'list',
+      name: 'names',
+      message: 'select employee to update:',
+      choices: names
+    },
+    {
+      type: 'rawlist',
+      name: 'role',
+      message: 'select new role:',
+      choices: roleTitles
+    }
+  ]).then((answer)=>{
+    updateEmp(answer.names, answer.role,);
+  }).catch((err)=>{
+    console.log(err);
+  })
+}
+
+//query to update employee
+async function updateEmp (names, role) {
+  //convert names to id
+  const empId = names.split('.')[0];
+  
+  //convert role title to role id
+  const [rows] = await dbConnect.query(`SELECT DISTINCT id FROM role WHERE title = ?`, role);
+  //console.log(rows);
+  const roleId = rows[0].id;
+
+  //console.log(empId, roleId);
+  const result = await dbConnect.query(`UPDATE employee SET role_id = ? WHERE id = ?`, [roleId, empId]);
   viewQuery('emp');
 }
