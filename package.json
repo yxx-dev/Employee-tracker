@@ -1,0 +1,32 @@
+{
+  "name": "employee_tracker",
+  "version": "0.0.1",
+  "description": "A command-line application that allows non-developers to easily view and interact with employee information stored in databases, using Node.js, Inquirer, and MySQL.",
+  "main": "server.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yxx-dev/Employee-tracker.git"
+  },
+  "keywords": [
+    "employee",
+    "tracker",
+    "inquirer",
+    "sql",
+    "console.table"
+  ],
+  "author": "Yilun Xu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yxx-dev/Employee-tracker/issues"
+  },
+  "homepage": "https://github.com/yxx-dev/Employee-tracker#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "8.2.4",
+    "mysql2": "^2.3.3"
+  }
+}
