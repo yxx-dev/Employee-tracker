@@ -24,7 +24,7 @@ async function connectDb () {
 async function inquirerInit() {
   inquirer.prompt([
     {
-      type: 'list',
+      type: 'rawlist',
       name: 'initialAction',
       message: 'Select the following action to continue:',
       choices: [
@@ -34,7 +34,8 @@ async function inquirerInit() {
         'add a department', 
         'add a role', 
         'add an employee', 
-        'update an employee role'
+        'update an employee role',
+        'exit'
       ]
     }
   ]).then((answers) => {
@@ -60,6 +61,8 @@ async function inquirerInit() {
       case 'update an employee role':
 
         break;
+      case 'exit':
+        break;
       default:
         console.log('no selection');
     }
@@ -71,6 +74,7 @@ async function inquirerInit() {
 
 async function viewQuery (option) {
   let rows=[];
+  //READ queries hard coded separately to avoid sql injection
   switch (option) {
     case 'dep':
       [rows] = await dbConnect.query('SELECT * FROM department');
@@ -85,4 +89,6 @@ async function viewQuery (option) {
   }
   //display query data
   console.table(rows);
+  //return to the selection list
+  inquirerInit();
 }
